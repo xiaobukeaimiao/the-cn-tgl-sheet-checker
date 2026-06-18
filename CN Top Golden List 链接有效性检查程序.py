@@ -18,11 +18,6 @@ INPUT_FILE = os.path.join(CURRENT_DIR, 'all_hyperlinks.txt')
 OUTPUT_FILE = os.path.join(CURRENT_DIR, '已检查的链接.txt')
 CONFIG_FILE = os.path.join(CURRENT_DIR, 'account_data.json')
 
-# 账号信息
-SESSDATA = "11191a1d%2C1786600325%2C2d36d%2A21CjAuZ84AkEqo6DArhoT4wPYClhIeE-Pap7WEQ419ccIY0cZYNx46YpVETinE3Y6RUEgSVlh2Z2ItYTBmOTRpNlJ1a04xalhXVkE2d2dzelRRYVRGbGtZamJ5MXFTUEUxVF9ncU8xLWtwZlFtQlJkOFhYdEJTdkJqS1JaRzZ3d1NDSExaX1hPTzRBIIEC"
-BILI_JCT = "7a42045c1cd4d42db5d6cb2f7c168883"
-
-
 with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
     config = json.load(f)
 SESSDATA = config.get("SESSDATA", "")
