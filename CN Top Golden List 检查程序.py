@@ -1240,16 +1240,26 @@ def generate_correct_zhubang(correct_zhubang):
 
 
 
-def export_hyperlinks(data_pack):
+def export_hyperlinks(data_pack, results):
     cells, players = data_pack
     path = Path(BASE_DIR) / HYPERLINK_FILENAME
 
     try:
-        p_links = [
-            f"{info['hyperlink']} [原B站名'{info['bilibili_name']}' 玩家'{name}']"
-            for name, info in players.items()
-            if info.get('has_hyperlink') and info.get('hyperlink')
-        ]
+        # 直接读取"对照用表格"全表中的超链接
+        ref_sheet = results.get("对照用表格", [])
+        p_links = []
+        for i in range(len(ref_sheet)):
+            row_data = ref_sheet[i]
+            if not row_data:
+                continue
+            for j in range(len(row_data)):
+                cell = row_data[j]
+                if cell and cell.get('hyperlink') and cell.get('value'):
+                    r = cell.get('row', i)
+                    c = cell.get('column', j)
+                    p_links.append(
+                        f"{cell['hyperlink']} [对照用表格 行{r} 列{int_to_excel_column(c)} 原B站名'{cell['value']}']"
+                    )
         
         c_links = [
             f"{c['hyperlink']} [{c['sheet']} 行{c['row']} 列{int_to_excel_column(c['col'])} 玩家'{c.get('cleaned','')}']"
@@ -1327,7 +1337,7 @@ def main():
         hyperlink_data = check_cell_values_players(results)
         main_zhubang_check(results)
 
-        export_hyperlinks(hyperlink_data)
+        export_hyperlinks(hyperlink_data, results)
 
         # 4. 备份文件
         rename_backup_FILE_PATH = rename_backup(FILE_PATH)
