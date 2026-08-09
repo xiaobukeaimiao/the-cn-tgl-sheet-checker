@@ -489,7 +489,8 @@ def check_cell_values_players(results):
                 ref_values[clean_name] = {
                     'has_hyperlink': has_link,
                     'hyperlink': row[3].get('hyperlink'),
-                    'bilibili_name': row[3].get('value')
+                    'bilibili_name': row[3].get('value'),
+                    'num_of_challenges': 0
                 }
                 if not has_link:
                     ref_no_links.add(clean_name)
@@ -530,14 +531,14 @@ def check_cell_values_players(results):
                 
                 total_challenges += 1
                 has_link = bool(cell.get('hyperlink'))
-                
+
                 item = {
                     'sheet': sheet_name, 'row': i, 'col': j,
                     'cleaned': val, 'has_hyperlink': has_link,
                     'hyperlink': cell.get('hyperlink'),
                     'reference_has_hyperlink': False
                 }
-                
+
                 if cfg['mode'] == 'matrix':
                     if i not in row_map: row_map[i] = {}
                     if val not in row_map[i]: row_map[i][val] = []
@@ -548,6 +549,7 @@ def check_cell_values_players(results):
 
                 if val in ref_values:
                     ref_info = ref_values[val]
+                    ref_values[val]['num_of_challenges'] += 1
                     item['reference_has_hyperlink'] = ref_info['has_hyperlink']
                     item['reference_hyperlink'] = ref_info['hyperlink']
                     if not has_link:
@@ -597,6 +599,16 @@ def check_cell_values_players(results):
             pass
     else: print("所有单元格的玩家都在对照表中找到了！")
     print()
+
+    exists_player_with_no_challenges = False
+    for _, (val, ref_v) in enumerate(ref_values.items()):
+        if not ref_v['num_of_challenges']:
+            if 0x2B or not 0x2B:
+                print(f"玩家 '{val}' 没有已登记的挑战.")
+                exists_player_with_no_challenges = True
+    if exists_player_with_no_challenges:
+        print()
+    
 
     return [all_checks, ref_values]
 
