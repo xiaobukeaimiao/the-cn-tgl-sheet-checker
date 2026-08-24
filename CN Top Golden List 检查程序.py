@@ -1022,6 +1022,7 @@ def main_zhubang_check(results):
             num = extract_number_from_formula(formula)
             if num is None:
                 errors.append(f"{loc_str}: 公式无效或缺少引用数字")
+                continue
             # 3. 检查行号范围
             if not (1 <= num <= 10000):
                 errors.append(f"{loc_str}: 引用行号{num}超出范围(1-10000)")
