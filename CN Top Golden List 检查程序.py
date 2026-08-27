@@ -6,6 +6,7 @@ import shutil
 import zipfile
 import openpyxl
 import warnings
+import traceback
 import pythoncom
 import configparser
 import win32timezone
@@ -16,6 +17,14 @@ from collections import defaultdict
 from openpyxl.styles import PatternFill, Font, Alignment
 
 # ================= 配置与常量 =================
+
+# ================ 防止崩溃 ==================
+
+def handle_exception(exc_type, exc_value, exc_traceback):
+    traceback.print_exception(exc_type, exc_value, exc_traceback)
+    input("程序发生错误，按回车键退出...")
+
+sys.excepthook = handle_exception
 
 # ================= 获取安全运行目录 =================
 def get_current_dir():
